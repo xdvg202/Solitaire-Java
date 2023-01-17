@@ -164,16 +164,19 @@ public class SolitaireDriver implements MouseListener, ActionListener, KeyListen
             }
             if(state == inGame){
                 //TODO draw all stacks 
+
+                int j = 0;
                 for(int i = 0; i<primaryStacks.length;i++){
 
-                    g2d.setColor(Color.LIGHT_GRAY);
-                    
                     int x = 25+(110*i);
+                    int y = 100+j*20;
 
-                    for(int j = 0; j<primaryStacks[i].getSize(); j++){
+                    g2d.drawRoundRect(x, y, 80, 160, 4, 4);
+
+                    for(j = 0; j<primaryStacks[i].getSize(); j++){
                         
                        
-                        int y = 100+j*20;
+                        y = 100+j*20;
                         g2d.drawImage(primaryStacks[i].get(j).getCardImage(), x, y, 75, 150, this);
                         
                         
