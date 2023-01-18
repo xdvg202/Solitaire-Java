@@ -20,6 +20,7 @@ public class Card {
     }
 
     public void loadImage() {
+        if(isFaceDown()){
         String pathName = value + suit + ".png";
 
         try {
@@ -27,6 +28,16 @@ public class Card {
         } catch (Exception e) {
             System.out.println("could not load file");
         }
+    }
+    else{
+        String pathName = "back.png";
+
+        try {
+            cardImg = ImageIO.read(new File("deckImages/" + pathName));
+        } catch (Exception e) {
+            System.out.println("could not load file");
+        }
+    }
         
     }
 
