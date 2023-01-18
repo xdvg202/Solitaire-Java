@@ -36,7 +36,7 @@ public class Deck {
                 if (j == 4) {
                     temp = "h";
                 }
-                Card tempCard = new Card(i, temp, false);
+                Card tempCard = new Card(i, temp);
 
                 Deck.add(tempCard);
             }
@@ -46,14 +46,16 @@ public class Deck {
     public void shuffleDeck() {
         Collections.shuffle(Deck);
     }
-    public void addtoFront(Card c){
+
+    public void addtoFront(Card c) {
         Deck.add(0, c);
     }
 
     public int getSize() {
         return Deck.size();
     }
-    public Card get(int i){
+
+    public Card get(int i) {
         return Deck.get(i);
     }
 
