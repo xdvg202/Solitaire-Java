@@ -73,7 +73,6 @@ public class SolitaireDriver implements MouseListener, ActionListener, KeyListen
             }
         }
 
-        
         pickupDeck = new Deck(false);
         wasteDeck = new Deck(false);
         // go through entire source deck and add those remaining cards into the pickup
@@ -82,7 +81,7 @@ public class SolitaireDriver implements MouseListener, ActionListener, KeyListen
             Card temp = sourceDeck.popFirstCard();
             pickupDeck.addtoFront(temp);
         }
-        for(int k = 0; k<secondaryStacks.length; k++){
+        for (int k = 0; k < secondaryStacks.length; k++) {
             secondaryStacks[k] = new Deck(false);
         }
 
@@ -92,19 +91,20 @@ public class SolitaireDriver implements MouseListener, ActionListener, KeyListen
         if (e.getSource() == timer0) {
             canvas0.repaint();
         }
-        //if timer and mouse pressed are triggered at the same time, dont repaint and let that trail follow 
-        //refresh every 10 mils or so to have that trail appear. 
 
     }
 
     public void mouseClicked(MouseEvent e) {
-        // TODO Auto-generated method stub
+        // go thru entire primary stacks array and check if the mouse is clicked
+        // on the front card using the getFrontCardx/y method
+        for (int i = 0; i < primaryStacks.length; i++) {
+
+        }
 
     }
 
     public void mousePressed(MouseEvent e) {
         // TODO Auto-generated method stub
-        
 
     }
 
@@ -167,17 +167,20 @@ public class SolitaireDriver implements MouseListener, ActionListener, KeyListen
                 for (int i = 0; i < primaryStacks.length; i++) {
 
                     int x = 25 + (110 * i);
-                    //draw the outline for each primary stack. 
+                    // draw the outline for each primary stack.
                     g2d.drawRoundRect(x, 250, cardWidth, cardHeight, 10, 10);
 
                     for (j = 0; j < primaryStacks[i].getSize(); j++) {
 
                         int y = 250 + j * 20;
-                        //check if the card is the very first one. 
-                        if (j == primaryStacks[i].getSize()-1) {
-                            g2d.drawImage(primaryStacks[i].get(j).getCardImage(false), x, y, cardWidth, cardHeight, this);
+                        // check if the card is the very first one.
+                        if (j == primaryStacks[i].getSize() - 1) {
+                            g2d.drawImage(primaryStacks[i].get(j).getCardImage(false), x, y, cardWidth, cardHeight,
+                                    this);
+                            primaryStacks[i].setFrontXY(x, y);
                         } else {
-                            g2d.drawImage(primaryStacks[i].get(j).getCardImage(true), x, y, cardWidth, cardHeight, this);
+                            g2d.drawImage(primaryStacks[i].get(j).getCardImage(true), x, y, cardWidth, cardHeight,
+                                    this);
                         }
 
                     }
@@ -187,18 +190,20 @@ public class SolitaireDriver implements MouseListener, ActionListener, KeyListen
                 g2d.drawImage(pickupDeck.get(0).getCardImage(true), 20, 30, cardWidth, cardHeight, this);
                 g2d.drawRoundRect(20, 30, cardWidth, cardHeight, 10, 10);
 
-                //this draws the waste stack
+                // this draws the waste stack
                 g2d.drawRoundRect(110, 30, cardWidth, cardHeight, 10, 10);
-                if(wasteDeck.getSize()>0){
+                if (wasteDeck.getSize() > 0) {
                     g2d.drawImage(wasteDeck.getFirst().getCardImage(false), 110, 30, cardWidth, cardHeight, this);
                 }
 
-                //draw the empty card outlines and if a secondary stack has a card, draw the first one. 
-                for(int k = 0; k<secondaryStacks.length; k++){
-                    if(secondaryStacks[k].getSize()>0){
-                        g2d.drawImage(secondaryStacks[k].getFirst().getCardImage(false),(250+k*110),30, cardWidth, cardHeight, this);
+                // draw the empty card outlines and if a secondary stack has a card, draw the
+                // first one.
+                for (int k = 0; k < secondaryStacks.length; k++) {
+                    if (secondaryStacks[k].getSize() > 0) {
+                        g2d.drawImage(secondaryStacks[k].getFirst().getCardImage(false), (250 + k * 110), 30, cardWidth,
+                                cardHeight, this);
                     }
-                    g2d.drawRoundRect(300+k*110, 30, cardWidth, cardHeight, 10, 10);
+                    g2d.drawRoundRect(300 + k * 110, 30, cardWidth, cardHeight, 10, 10);
                 }
             }
             if (state == instructions) {

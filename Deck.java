@@ -3,6 +3,8 @@ import java.util.*;
 public class Deck {
 
     private ArrayList<Card> Deck = new ArrayList<Card>();
+    private int frontX = 0;
+    private int frontY = 0;
 
     public Deck(boolean toBePopulated) {
         if (toBePopulated) {
@@ -10,14 +12,29 @@ public class Deck {
         }
     }
 
-    public Card popFirstCard() {
-        Card tempCard = Deck.get(0);
-        Deck.remove(0);
-        return tempCard;
+    // non modifier method to get the front card in the stack
+    public Card getFirstCard() {
+        if (Deck.size() > 0) {
+            return Deck.get(0);
+        } else {
+            return null;
+        }
     }
 
-    public void addToBack(Card c) {
-        Deck.add(Deck.size() - 1, c);
+    // stores the x and y of the front card in the stack.
+    public void setFrontXY(int x, int y) {
+        frontX = x;
+        frontY = y;
+    }
+
+    public Card popFirstCard() {
+        if (Deck.size() > 0) {
+            Card tempCard = Deck.get(0);
+            Deck.remove(0);
+            return tempCard;
+        } else {
+            return null;
+        }
     }
 
     public void addCleanDeck() {
@@ -58,7 +75,8 @@ public class Deck {
     public Card get(int i) {
         return Deck.get(i);
     }
-    public Card getFirst(){
+
+    public Card getFirst() {
         return Deck.get(0);
     }
 
