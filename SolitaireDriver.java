@@ -90,7 +90,7 @@ public class SolitaireDriver implements MouseListener, ActionListener, KeyListen
 
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == timer0) {
-
+            canvas0.repaint();
         }
 
     }
@@ -102,6 +102,7 @@ public class SolitaireDriver implements MouseListener, ActionListener, KeyListen
 
     public void mousePressed(MouseEvent e) {
         // TODO Auto-generated method stub
+        
 
     }
 
