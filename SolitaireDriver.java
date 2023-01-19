@@ -23,6 +23,8 @@ public class SolitaireDriver implements MouseListener, ActionListener, KeyListen
     public static Deck[] secondaryStacks = new Deck[4];
     public static Deck pickupDeck;
     public static Deck wasteDeck;
+    public static final int cardWidth = 75;
+    public static final int cardHeight = 150;
 
     public static void initialize() {
         // all NON-GUI related functions go here
@@ -71,11 +73,7 @@ public class SolitaireDriver implements MouseListener, ActionListener, KeyListen
             }
         }
 
-        // then the pickup pile
-        /*
-         * TODO setup with loops, the pickup and waste deck with the cards
-         * remaining in the source deck.
-         */
+        
         pickupDeck = new Deck(false);
         wasteDeck = new Deck(false);
         // go through entire source deck and add those remaining cards into the pickup
@@ -83,6 +81,9 @@ public class SolitaireDriver implements MouseListener, ActionListener, KeyListen
         while (sourceDeck.getSize() > 0) {
             Card temp = sourceDeck.popFirstCard();
             pickupDeck.addtoFront(temp);
+        }
+        for(int k = 0; k<secondaryStacks.length; k++){
+            secondaryStacks[k] = new Deck(false);
         }
 
     }
@@ -164,26 +165,32 @@ public class SolitaireDriver implements MouseListener, ActionListener, KeyListen
 
                     int x = 25 + (110 * i);
 
-                    g2d.fillRoundRect(x - 5, 250, 80, 160, 4, 4);
+                    g2d.drawRoundRect(x, 250, cardWidth, cardHeight, 10, 10);
 
                     for (j = 0; j < primaryStacks[i].getSize(); j++) {
 
                         int y = 250 + j * 20;
                         if (j == primaryStacks[i].getSize()-1) {
-                            g2d.drawImage(primaryStacks[i].get(j).getCardImage(false), x, y, 75, 150, this);
+                            g2d.drawImage(primaryStacks[i].get(j).getCardImage(false), x, y, cardWidth, cardHeight, this);
                         } else {
-                            g2d.drawImage(primaryStacks[i].get(j).getCardImage(true), x, y, 75, 150, this);
+                            g2d.drawImage(primaryStacks[i].get(j).getCardImage(true), x, y, cardWidth, cardHeight, this);
                         }
 
                     }
 
                 }
                 // this is for the pickup stack:
-                g2d.drawImage(pickupDeck.get(0).getCardImage(true), 24, 30, 75, 150, this);
+                g2d.drawImage(pickupDeck.get(0).getCardImage(true), 20, 30, cardWidth, cardHeight, this);
 
-                // TODO add outline/shadow to all the stacks (primary, secondary, pickup, and
-                // waste)
+                g2d.drawRoundRect(110, 30, cardWidth, cardHeight, 10, 10);
 
+
+                for(int k = 0; k<secondaryStacks.length; k++){
+                    if(secondaryStacks[k].getSize()>0){
+                        g2d.drawImage(secondaryStacks[k].get(1).getCardImage(false),(250+k*110),30, cardWidth, cardHeight, this);
+                    }
+                    g2d.drawRoundRect(300+k*110, 30, cardWidth, cardHeight, 10, 10);
+                }
             }
             if (state == instructions) {
 
