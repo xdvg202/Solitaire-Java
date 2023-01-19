@@ -92,6 +92,8 @@ public class SolitaireDriver implements MouseListener, ActionListener, KeyListen
         if (e.getSource() == timer0) {
             canvas0.repaint();
         }
+        //if timer and mouse pressed are triggered at the same time, dont repaint and let that trail follow 
+        //refresh every 10 mils or so to have that trail appear. 
 
     }
 
