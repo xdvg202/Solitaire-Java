@@ -164,12 +164,13 @@ public class SolitaireDriver implements MouseListener, ActionListener, KeyListen
                 for (int i = 0; i < primaryStacks.length; i++) {
 
                     int x = 25 + (110 * i);
-
+                    //draw the outline for each primary stack. 
                     g2d.drawRoundRect(x, 250, cardWidth, cardHeight, 10, 10);
 
                     for (j = 0; j < primaryStacks[i].getSize(); j++) {
 
                         int y = 250 + j * 20;
+                        //check if the card is the very first one. 
                         if (j == primaryStacks[i].getSize()-1) {
                             g2d.drawImage(primaryStacks[i].get(j).getCardImage(false), x, y, cardWidth, cardHeight, this);
                         } else {
@@ -181,13 +182,18 @@ public class SolitaireDriver implements MouseListener, ActionListener, KeyListen
                 }
                 // this is for the pickup stack:
                 g2d.drawImage(pickupDeck.get(0).getCardImage(true), 20, 30, cardWidth, cardHeight, this);
+                g2d.drawRoundRect(20, 30, cardWidth, cardHeight, 10, 10);
 
+                //this draws the waste stack
                 g2d.drawRoundRect(110, 30, cardWidth, cardHeight, 10, 10);
+                if(wasteDeck.getSize()>0){
+                    g2d.drawImage(wasteDeck.getFirst().getCardImage(false), 110, 30, cardWidth, cardHeight, this);
+                }
 
-
+                //draw the empty card outlines and if a secondary stack has a card, draw the first one. 
                 for(int k = 0; k<secondaryStacks.length; k++){
                     if(secondaryStacks[k].getSize()>0){
-                        g2d.drawImage(secondaryStacks[k].get(1).getCardImage(false),(250+k*110),30, cardWidth, cardHeight, this);
+                        g2d.drawImage(secondaryStacks[k].getFirst().getCardImage(false),(250+k*110),30, cardWidth, cardHeight, this);
                     }
                     g2d.drawRoundRect(300+k*110, 30, cardWidth, cardHeight, 10, 10);
                 }

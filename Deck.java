@@ -58,5 +58,8 @@ public class Deck {
     public Card get(int i) {
         return Deck.get(i);
     }
+    public Card getFirst(){
+        return Deck.get(0);
+    }
 
 }
