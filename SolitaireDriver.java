@@ -2,6 +2,10 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.awt.*;
 
+/*
+ * 
+ * made by vicky p
+ */
 public class SolitaireDriver implements MouseListener, ActionListener, KeyListener {
 
     public static int state;
