@@ -3,8 +3,7 @@ import java.util.*;
 public class Deck {
 
     private ArrayList<Card> Deck = new ArrayList<Card>();
-    private int frontX = 0;
-    private int frontY = 0;
+    private int[] frontXY = { 0, 0 };
 
     public Deck(boolean toBePopulated) {
         if (toBePopulated) {
@@ -23,8 +22,12 @@ public class Deck {
 
     // stores the x and y of the front card in the stack.
     public void setFrontXY(int x, int y) {
-        frontX = x;
-        frontY = y;
+        frontXY[0] = x;
+        frontXY[1] = y;
+    }
+
+    public int[] getFrontXY() {
+        return frontXY;
     }
 
     public Card popFirstCard() {

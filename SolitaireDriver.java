@@ -2,10 +2,6 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.awt.*;
 
-/*
- * 
- * made by vicky p
- */
 public class SolitaireDriver implements MouseListener, ActionListener, KeyListener {
 
     public static int state;
@@ -181,6 +177,7 @@ public class SolitaireDriver implements MouseListener, ActionListener, KeyListen
                         if (j == primaryStacks[i].getSize() - 1) {
                             g2d.drawImage(primaryStacks[i].get(j).getCardImage(false), x, y, cardWidth, cardHeight,
                                     this);
+                            // this records the X and Y of the front card in the stack
                             primaryStacks[i].setFrontXY(x, y);
                         } else {
                             g2d.drawImage(primaryStacks[i].get(j).getCardImage(true), x, y, cardWidth, cardHeight,
