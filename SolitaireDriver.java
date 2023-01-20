@@ -31,10 +31,10 @@ public class SolitaireDriver implements MouseListener, ActionListener {
     public static final int cardHeight = 150;
     public static boolean isTxtRunning = false;
 
-    public static JButton swag;
-    public static JPanel buttons;
+    public static JButton readMeBut;
 
     public static void initialize() {
+        canvas0.setLayout(null);
         // all NON-GUI related functions go here
         sourceDeck = new Deck(true);
         sourceDeck.shuffleDeck();
@@ -58,10 +58,11 @@ public class SolitaireDriver implements MouseListener, ActionListener {
         menuButton.addActionListener(new SolitaireDriver());
         instrButton.addActionListener(new SolitaireDriver());
 
-        buttons = new JPanel(new FlowLayout());
-        swag = new JButton("swag");
-        buttons.add(swag);
-        buttons.setBounds(200, 200, 10, 10);
+        readMeBut = new JButton("README");
+        canvas0.add(readMeBut);
+        readMeBut.addActionListener(new SolitaireDriver());
+        readMeBut.setBounds(200, 200, 100, 100);
+        readMeBut.setVisible(false);
 
         frame0.add(canvas0, BorderLayout.CENTER);
         frame0.add(butPanel, BorderLayout.SOUTH);
@@ -106,6 +107,9 @@ public class SolitaireDriver implements MouseListener, ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == timer0) {
 
+            if (state == instructions) {
+                readMeBut.setVisible(true);
+            }
         }
         if (e.getSource() == menuButton) {
             state = inMenu;
@@ -115,6 +119,9 @@ public class SolitaireDriver implements MouseListener, ActionListener {
         }
         if (e.getSource() == instrButton) {
             state = instructions;
+        }
+        if (e.getSource() == readMeBut) {
+            isTxtRunning = true;
         }
         canvas0.repaint();
     }
@@ -231,23 +238,24 @@ public class SolitaireDriver implements MouseListener, ActionListener {
             if (state == instructions) {
 
                 // add button and listener to open notpad with the readme attached
-                //TODO figure out how to add buttons into the canvas. 
+                // TODO figure out how to add buttons into the canvas.
                 /*
-                possibly have them in the BtnPanel and hide them when not in instruction menu
-                make a shape in the instruction menu and see if mouse clicked within the bounds of that shape
-                then exit instructions
+                 * possibly have them in the BtnPanel and hide them when not in instruction menu
+                 * make a shape in the instruction menu and see if mouse clicked within the
+                 * bounds of that shape
+                 * then exit instructions
+                 * 
+                 * WHEN DONE INSTRUCTION MENU DELETE THIS COMMENT AND POST TO 5/8
+                 */
 
-                WHEN DONE INSTRUCTION MENU DELETE THIS COMMENT AND POST TO 5/8
-                */
-
-                if (!isTxtRunning) {
+                if (isTxtRunning) {
                     ProcessBuilder pb = new ProcessBuilder("Notepad.exe", "README.txt");
                     try {
                         pb.start();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    isTxtRunning = true;
+                    isTxtRunning = false;
                 }
                 // the demo image loader
                 JButton demoBut = new JButton("Click here to see what game might look like");
