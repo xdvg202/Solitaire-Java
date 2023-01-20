@@ -64,14 +64,13 @@ public class SolitaireDriver implements MouseListener, ActionListener {
         readMeBut = new JButton("README");
         canvas0.add(readMeBut);
         readMeBut.addActionListener(new SolitaireDriver());
-        readMeBut.setBounds(200, 200, 100, 100);
+        readMeBut.setBounds(50, 125, 100, 50);
         readMeBut.setVisible(false);
 
         demoBut = new JButton("Click here to see what game might look like");
-        demoBut.setBounds(400, 200, 400, 100);
+        demoBut.setBounds(50, 25, 300, 50);
         demoBut.addActionListener(new SolitaireDriver());
         demoBut.setVisible(false);
-
         canvas0.add(demoBut);
 
         frame0.add(canvas0, BorderLayout.CENTER);
@@ -271,10 +270,10 @@ public class SolitaireDriver implements MouseListener, ActionListener {
                     } catch (Exception e) {
                         System.out.println("could not load file");
                     }
-                    g2d.drawImage(demoImage, 50, 50, 400, 300, this);
+                    g2d.drawImage(demoImage, canvas0.getWidth() / 2 - 200, canvas0.getHeight() / 2, 400, 300, this);
 
                 }
-
+                //TODO draw the text instructions (simplified instructions )
             }
 
         }
