@@ -1,8 +1,12 @@
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.event.*;
+import java.io.File;
+import java.io.IOException;
 import java.awt.*;
+import java.awt.image.*;
 
-public class SolitaireDriver implements MouseListener, ActionListener, KeyListener {
+public class SolitaireDriver implements MouseListener, ActionListener {
 
     public static int state;
     public static int inMenu = -1;
@@ -25,6 +29,10 @@ public class SolitaireDriver implements MouseListener, ActionListener, KeyListen
     public static Deck wasteDeck;
     public static final int cardWidth = 75;
     public static final int cardHeight = 150;
+    public static boolean isTxtRunning = false;
+
+    public static JButton swag;
+    public static JPanel buttons;
 
     public static void initialize() {
         // all NON-GUI related functions go here
@@ -40,12 +48,20 @@ public class SolitaireDriver implements MouseListener, ActionListener, KeyListen
         frame0.setLayout(new BorderLayout());
 
         butPanel = new JPanel(new FlowLayout());
-        startButton = new JButton("Start Game");
+        startButton = new JButton("Start/Restart Game");
         menuButton = new JButton("Menu");
         instrButton = new JButton("Instructions");
         butPanel.add(startButton);
         butPanel.add(menuButton);
         butPanel.add(instrButton);
+        startButton.addActionListener(new SolitaireDriver());
+        menuButton.addActionListener(new SolitaireDriver());
+        instrButton.addActionListener(new SolitaireDriver());
+
+        buttons = new JPanel(new FlowLayout());
+        swag = new JButton("swag");
+        buttons.add(swag);
+        buttons.setBounds(200, 200, 10, 10);
 
         frame0.add(canvas0, BorderLayout.CENTER);
         frame0.add(butPanel, BorderLayout.SOUTH);
@@ -89,25 +105,33 @@ public class SolitaireDriver implements MouseListener, ActionListener, KeyListen
 
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == timer0) {
-            canvas0.repaint();
-        }
 
+        }
+        if (e.getSource() == menuButton) {
+            state = inMenu;
+        }
+        if (e.getSource() == startButton) {
+            state = inGame;
+        }
+        if (e.getSource() == instrButton) {
+            state = instructions;
+        }
+        canvas0.repaint();
     }
 
     public void mouseClicked(MouseEvent e) {
-        
-        //20x 30y for pickup deck
 
-        //check click detenction for pickup deck
-        if((e.getX()<20+cardWidth)&&(e.getX()>20)){
+        // 20x 30y for pickup deck
+
+        // check click detenction for pickup deck
+        if ((e.getX() < 20 + cardWidth) && (e.getX() > 20)) {
 
         }
-        
 
     }
 
     public void mousePressed(MouseEvent e) {
-        
+
         // go thru entire primary stacks array and check if the mouse is clicked
         // on the front card using the getFrontCardx/y method
         for (int i = 0; i < primaryStacks.length; i++) {
@@ -125,32 +149,14 @@ public class SolitaireDriver implements MouseListener, ActionListener, KeyListen
     }
 
     public void mouseReleased(MouseEvent e) {
-        
 
     }
 
     public void mouseEntered(MouseEvent e) {
-        
 
     }
 
     public void mouseExited(MouseEvent e) {
-        
-
-    }
-
-    public void keyTyped(KeyEvent e) {
-        
-
-    }
-
-    public void keyPressed(KeyEvent e) {
-        
-
-    }
-
-    public void keyReleased(KeyEvent e) {
-        
 
     }
 
@@ -199,7 +205,6 @@ public class SolitaireDriver implements MouseListener, ActionListener, KeyListen
                             g2d.drawImage(primaryStacks[i].get(j).getCardImage(true), x, y, cardWidth, cardHeight,
                                     this);
                         }
-
                     }
 
                 }
@@ -224,6 +229,36 @@ public class SolitaireDriver implements MouseListener, ActionListener, KeyListen
                 }
             }
             if (state == instructions) {
+
+                // add button and listener to open notpad with the readme attached
+                //TODO figure out how to add buttons into the canvas. 
+                /*
+                possibly have them in the BtnPanel and hide them when not in instruction menu
+                make a shape in the instruction menu and see if mouse clicked within the bounds of that shape
+                then exit instructions
+
+                WHEN DONE INSTRUCTION MENU DELETE THIS COMMENT AND POST TO 5/8
+                */
+
+                if (!isTxtRunning) {
+                    ProcessBuilder pb = new ProcessBuilder("Notepad.exe", "README.txt");
+                    try {
+                        pb.start();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    isTxtRunning = true;
+                }
+                // the demo image loader
+                JButton demoBut = new JButton("Click here to see what game might look like");
+                // g2d.
+                BufferedImage demo = new BufferedImage(3, 3, 3);
+                try {
+                    demo = ImageIO.read(new File("demo.png"));
+                } catch (Exception e) {
+                    System.out.println("could not load file");
+                }
+                // g2d.drawImage(demo, 50, 50, 400, 300, this);
 
             }
 

@@ -10,6 +10,7 @@ public class Deck {
             addCleanDeck();
         }
     }
+    //TODO add method to have an array of cards that are face up and face down and then move that array around.
 
     // non modifier method to get the front card in the stack
     public Card getFirstCard() {
