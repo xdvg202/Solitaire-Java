@@ -98,7 +98,15 @@ public class SolitaireDriver implements MouseListener, ActionListener, KeyListen
         // go thru entire primary stacks array and check if the mouse is clicked
         // on the front card using the getFrontCardx/y method
         for (int i = 0; i < primaryStacks.length; i++) {
+            int[] xy = primaryStacks[i].getFrontXY();
+            int x = xy[0];
+            int y = xy[1];
 
+            if (e.getX() == x) {
+                if (e.getY() == y) {
+
+                }
+            }
         }
 
     }
