@@ -34,6 +34,12 @@ public class Card {
         }
 
     }
+    public int getValue(){
+        return value;
+    }
+    public String getSuit(){
+        return suit;
+    }
 
     public BufferedImage getCardImage(boolean fd) {
         if(fd){

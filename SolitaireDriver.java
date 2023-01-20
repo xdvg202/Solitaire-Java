@@ -95,6 +95,19 @@ public class SolitaireDriver implements MouseListener, ActionListener, KeyListen
     }
 
     public void mouseClicked(MouseEvent e) {
+        
+        //20x 30y for pickup deck
+
+        //check click detenction for pickup deck
+        if((e.getX()<20+cardWidth)&&(e.getX()>20)){
+
+        }
+        
+
+    }
+
+    public void mousePressed(MouseEvent e) {
+        
         // go thru entire primary stacks array and check if the mouse is clicked
         // on the front card using the getFrontCardx/y method
         for (int i = 0; i < primaryStacks.length; i++) {
@@ -111,38 +124,33 @@ public class SolitaireDriver implements MouseListener, ActionListener, KeyListen
 
     }
 
-    public void mousePressed(MouseEvent e) {
-        // TODO Auto-generated method stub
-
-    }
-
     public void mouseReleased(MouseEvent e) {
-        // TODO Auto-generated method stub
+        
 
     }
 
     public void mouseEntered(MouseEvent e) {
-        // TODO Auto-generated method stub
+        
 
     }
 
     public void mouseExited(MouseEvent e) {
-        // TODO Auto-generated method stub
+        
 
     }
 
     public void keyTyped(KeyEvent e) {
-        // TODO Auto-generated method stub
+        
 
     }
 
     public void keyPressed(KeyEvent e) {
-        // TODO Auto-generated method stub
+        
 
     }
 
     public void keyReleased(KeyEvent e) {
-        // TODO Auto-generated method stub
+        
 
     }
 
