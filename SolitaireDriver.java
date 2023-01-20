@@ -30,8 +30,11 @@ public class SolitaireDriver implements MouseListener, ActionListener {
     public static final int cardWidth = 75;
     public static final int cardHeight = 150;
     public static boolean isTxtRunning = false;
+    public static JButton demoBut;
 
+    public static BufferedImage demoImage;
     public static JButton readMeBut;
+    public static boolean loadDemoImage;
 
     public static void initialize() {
         canvas0.setLayout(null);
@@ -63,6 +66,13 @@ public class SolitaireDriver implements MouseListener, ActionListener {
         readMeBut.addActionListener(new SolitaireDriver());
         readMeBut.setBounds(200, 200, 100, 100);
         readMeBut.setVisible(false);
+
+        demoBut = new JButton("Click here to see what game might look like");
+        demoBut.setBounds(400, 200, 400, 100);
+        demoBut.addActionListener(new SolitaireDriver());
+        demoBut.setVisible(false);
+
+        canvas0.add(demoBut);
 
         frame0.add(canvas0, BorderLayout.CENTER);
         frame0.add(butPanel, BorderLayout.SOUTH);
@@ -109,6 +119,7 @@ public class SolitaireDriver implements MouseListener, ActionListener {
 
             if (state == instructions) {
                 readMeBut.setVisible(true);
+                demoBut.setVisible(true);
             }
         }
         if (e.getSource() == menuButton) {
@@ -122,6 +133,14 @@ public class SolitaireDriver implements MouseListener, ActionListener {
         }
         if (e.getSource() == readMeBut) {
             isTxtRunning = true;
+        }
+        if (e.getSource() == demoBut) {
+            if (loadDemoImage) {
+                loadDemoImage = false;
+            } else {
+                loadDemoImage = true;
+            }
+
         }
         canvas0.repaint();
     }
@@ -190,7 +209,6 @@ public class SolitaireDriver implements MouseListener, ActionListener {
 
             }
             if (state == inGame) {
-                // TODO draw all stacks
 
                 int j = 0;
                 for (int i = 0; i < primaryStacks.length; i++) {
@@ -237,17 +255,6 @@ public class SolitaireDriver implements MouseListener, ActionListener {
             }
             if (state == instructions) {
 
-                // add button and listener to open notpad with the readme attached
-                // TODO figure out how to add buttons into the canvas.
-                /*
-                 * possibly have them in the BtnPanel and hide them when not in instruction menu
-                 * make a shape in the instruction menu and see if mouse clicked within the
-                 * bounds of that shape
-                 * then exit instructions
-                 * 
-                 * WHEN DONE INSTRUCTION MENU DELETE THIS COMMENT AND POST TO 5/8
-                 */
-
                 if (isTxtRunning) {
                     ProcessBuilder pb = new ProcessBuilder("Notepad.exe", "README.txt");
                     try {
@@ -258,15 +265,15 @@ public class SolitaireDriver implements MouseListener, ActionListener {
                     isTxtRunning = false;
                 }
                 // the demo image loader
-                JButton demoBut = new JButton("Click here to see what game might look like");
-                // g2d.
-                BufferedImage demo = new BufferedImage(3, 3, 3);
-                try {
-                    demo = ImageIO.read(new File("demo.png"));
-                } catch (Exception e) {
-                    System.out.println("could not load file");
+                if (loadDemoImage) {
+                    try {
+                        demoImage = ImageIO.read(new File("demo.png"));
+                    } catch (Exception e) {
+                        System.out.println("could not load file");
+                    }
+                    g2d.drawImage(demoImage, 50, 50, 400, 300, this);
+
                 }
-                // g2d.drawImage(demo, 50, 50, 400, 300, this);
 
             }
 
