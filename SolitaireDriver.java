@@ -296,7 +296,7 @@ public class SolitaireDriver implements MouseListener, ActionListener {
                         g2d.drawString(simpInstr[z], 400, 100 + z * 20);
                     }
                 }
-                // TODO draw the text instructions (simplified instructions )
+                
 
             }
 
