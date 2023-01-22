@@ -14,24 +14,27 @@ public class SolitaireDriver implements MouseListener, ActionListener {
     public static int instructions = 1;
     public static int won = 2;
 
+    public static Timer timer0 = new Timer(1, new SolitaireDriver());
     public static JFrame frame0;
+
     public static DrawCanvas canvas0 = new DrawCanvas();
     public static JPanel butPanel;
     public static JButton startButton;
     public static JButton menuButton;
     public static JButton instrButton;
-    public static Timer timer0 = new Timer(1, new SolitaireDriver());
 
     public static Deck sourceDeck;
     public static Deck[] primaryStacks = new Deck[7];
     public static Deck[] secondaryStacks = new Deck[4];
     public static Deck pickupDeck;
     public static Deck wasteDeck;
+
     public static final int cardWidth = 75;
     public static final int cardHeight = 150;
+    public static final int cardEdgeHeight = 20;
+
     public static boolean isTxtRunning = false;
     public static JButton demoBut;
-
     public static BufferedImage demoImage;
     public static JButton readMeBut;
     public static boolean loadDemoImage;
@@ -73,6 +76,7 @@ public class SolitaireDriver implements MouseListener, ActionListener {
         demoBut.setVisible(false);
         canvas0.add(demoBut);
 
+        frame0.addMouseListener(new SolitaireDriver());
         frame0.add(canvas0, BorderLayout.CENTER);
         frame0.add(butPanel, BorderLayout.SOUTH);
         frame0.requestFocus();
@@ -87,7 +91,7 @@ public class SolitaireDriver implements MouseListener, ActionListener {
         for (int i = 0; i < 7; i++) {
             // loop to fill each stack
             for (int j = 0; j <= i; j++) {
-                // initialize the stack on first runthrough
+                // initialize the stack on first run through
                 if (j == 0) {
                     primaryStacks[i] = new Deck(false);
                 }
@@ -155,6 +159,13 @@ public class SolitaireDriver implements MouseListener, ActionListener {
         // check click detenction for pickup deck
         if ((e.getX() < 20 + cardWidth) && (e.getX() > 20)) {
 
+            if ((e.getY() < 30 + cardHeight) && (e.getY() > 30)) {
+                if (pickupDeck.getSize() > 0) {
+                    Card temp = pickupDeck.popFirstCard();
+                    temp.setFaceDown(false);
+                    wasteDeck.addtoFront(temp);
+                }
+            }
         }
 
     }
@@ -163,13 +174,27 @@ public class SolitaireDriver implements MouseListener, ActionListener {
 
         // go thru entire primary stacks array and check if the mouse is clicked
         // on the front card using the getFrontCardx/y method
-        for (int i = 0; i < primaryStacks.length; i++) {
-            int[] xy = primaryStacks[i].getFrontXY();
-            int x = xy[0];
-            int y = xy[1];
 
-            if (e.getX() == x) {
-                if (e.getY() == y) {
+        for (int i = 0; i < primaryStacks.length; i++) {
+
+            // go thru each card of the pile
+            for (int j = 0; j < primaryStacks[i].getSize(); j++) {
+                int x = primaryStacks[i].get(j).getX();
+                int y = primaryStacks[i].get(j).getY();
+
+                // have case to check for regular tip only card by using tipCardHeight and
+                // tipCardWidth
+
+                // and one case for front face card. by using card width and card height
+                if (e.getX() > x && e.getX() < x + cardWidth) {
+                    if (primaryStacks[i].get(j).getIsFront()) {
+                        if (e.getY() > y && e.getY() < y + cardHeight) {
+                            System.out.println("hello this is a front card");
+                        }
+                    }
+                    else if(e.getY() > y && e.getY() < y + cardEdgeHeight) {
+                        System.out.println("hello this isnt");
+                    }
 
                 }
             }
@@ -219,38 +244,43 @@ public class SolitaireDriver implements MouseListener, ActionListener {
                     int x = 25 + (110 * i);
                     // draw the outline for each primary stack.
                     g2d.drawRoundRect(x, 250, cardWidth, cardHeight, 10, 10);
-
+                    // go through each pile
                     for (j = 0; j < primaryStacks[i].getSize(); j++) {
 
                         int y = 250 + j * 20;
-                        // check if the card is the very first one.
+
+                        // check if the card is the very front one.
                         if (j == primaryStacks[i].getSize() - 1) {
-                            g2d.drawImage(primaryStacks[i].get(j).getCardImage(false), x, y, cardWidth, cardHeight,
+                            primaryStacks[i].get(j).setFront();
+                            primaryStacks[i].get(j).setFaceDown(false);
+                            g2d.drawImage(primaryStacks[i].get(j).getCardImage(), x, y, cardWidth, cardHeight,
                                     this);
-                            // this records the X and Y of the front card in the stack
-                            primaryStacks[i].setFrontXY(x, y);
                         } else {
-                            g2d.drawImage(primaryStacks[i].get(j).getCardImage(true), x, y, cardWidth, cardHeight,
+                            g2d.drawImage(primaryStacks[i].get(j).getCardImage(), x, y, cardWidth, cardHeight,
                                     this);
                         }
+                        primaryStacks[i].get(j).setXY(x, y);
                     }
 
                 }
+
                 // this is for the pickup stack:
-                g2d.drawImage(pickupDeck.get(0).getCardImage(true), 20, 30, cardWidth, cardHeight, this);
                 g2d.drawRoundRect(20, 30, cardWidth, cardHeight, 10, 10);
+                if (pickupDeck.getSize() > 0) {
+                    g2d.drawImage(pickupDeck.get(0).getCardImage(), 20, 30, cardWidth, cardHeight, this);
+                }
 
                 // this draws the waste stack
                 g2d.drawRoundRect(110, 30, cardWidth, cardHeight, 10, 10);
                 if (wasteDeck.getSize() > 0) {
-                    g2d.drawImage(wasteDeck.getFirst().getCardImage(false), 110, 30, cardWidth, cardHeight, this);
+                    g2d.drawImage(wasteDeck.getFirst().getCardImage(), 110, 30, cardWidth, cardHeight, this);
                 }
 
                 // draw the empty card outlines and if a secondary stack has a card, draw the
                 // first one.
                 for (int k = 0; k < secondaryStacks.length; k++) {
                     if (secondaryStacks[k].getSize() > 0) {
-                        g2d.drawImage(secondaryStacks[k].getFirst().getCardImage(false), (250 + k * 110), 30, cardWidth,
+                        g2d.drawImage(secondaryStacks[k].getFirst().getCardImage(), (250 + k * 110), 30, cardWidth,
                                 cardHeight, this);
                     }
                     g2d.drawRoundRect(300 + k * 110, 30, cardWidth, cardHeight, 10, 10);
@@ -274,7 +304,8 @@ public class SolitaireDriver implements MouseListener, ActionListener {
                     } catch (Exception e) {
                         System.out.println("could not load file");
                     }
-                    g2d.drawImage(demoImage, canvas0.getWidth() / 2 - 200, canvas0.getHeight() / 2-150, 550, 400, this);
+                    g2d.drawImage(demoImage, canvas0.getWidth() / 2 - 200, canvas0.getHeight() / 2 - 150, 550, 400,
+                            this);
 
                 } else {
                     g2d.setFont(new Font("hello", Font.BOLD, 15));
@@ -296,7 +327,6 @@ public class SolitaireDriver implements MouseListener, ActionListener {
                         g2d.drawString(simpInstr[z], 400, 100 + z * 20);
                     }
                 }
-                
 
             }
 

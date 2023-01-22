@@ -3,7 +3,7 @@ import java.util.*;
 public class Deck {
 
     private ArrayList<Card> Deck = new ArrayList<Card>();
-    private int[] frontXY = { 0, 0 };
+    
 //contructor which will fill the deck if it has been marked for that task.
     public Deck(boolean toBePopulated) {
         if (toBePopulated) {
@@ -21,15 +21,6 @@ public class Deck {
         }
     }
 
-    // stores the x and y of the front card in the stack.
-    public void setFrontXY(int x, int y) {
-        frontXY[0] = x;
-        frontXY[1] = y;
-    }
-//x and y of the front card
-    public int[] getFrontXY() {
-        return frontXY;
-    }
 //pops the first card(does remove it)
     public Card popFirstCard() {
         if (Deck.size() > 0) {
