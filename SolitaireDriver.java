@@ -120,6 +120,10 @@ public class SolitaireDriver implements MouseListener, ActionListener {
                 readMeBut.setVisible(true);
                 demoBut.setVisible(true);
             }
+            if (state == inMenu || state == inGame) {
+                readMeBut.setVisible(false);
+                demoBut.setVisible(false);
+            }
         }
         if (e.getSource() == menuButton) {
             state = inMenu;
@@ -270,10 +274,30 @@ public class SolitaireDriver implements MouseListener, ActionListener {
                     } catch (Exception e) {
                         System.out.println("could not load file");
                     }
-                    g2d.drawImage(demoImage, canvas0.getWidth() / 2 - 200, canvas0.getHeight() / 2, 400, 300, this);
+                    g2d.drawImage(demoImage, canvas0.getWidth() / 2 - 200, canvas0.getHeight() / 2-150, 550, 400, this);
 
+                } else {
+                    g2d.setFont(new Font("hello", Font.BOLD, 15));
+                    String[] simpInstr = {
+                            "The goal of this game is to organize all the card into",
+                            "the top four stacks.",
+                            "The four stacks are all divided by suit.",
+                            "The game starts with stacks that have",
+                            "some cards face up.",
+                            "To organize these piles",
+                            "you have to move the face up cards around",
+                            "to other piles.",
+                            "The order reciprocates from black to red",
+                            "and the order of card value decreases",
+                            "from front to back.",
+                            "For more details access the readme",
+                            "(via button on the left)" };
+                    for (int z = 0; z < simpInstr.length; z++) {
+                        g2d.drawString(simpInstr[z], 400, 100 + z * 20);
+                    }
                 }
-                //TODO draw the text instructions (simplified instructions )
+                // TODO draw the text instructions (simplified instructions )
+
             }
 
         }
