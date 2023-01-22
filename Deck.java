@@ -4,7 +4,7 @@ public class Deck {
 
     private ArrayList<Card> Deck = new ArrayList<Card>();
     private int[] frontXY = { 0, 0 };
-
+//contructor which will fill the deck if it has been marked for that task.
     public Deck(boolean toBePopulated) {
         if (toBePopulated) {
             addCleanDeck();
@@ -26,11 +26,11 @@ public class Deck {
         frontXY[0] = x;
         frontXY[1] = y;
     }
-
+//x and y of the front card
     public int[] getFrontXY() {
         return frontXY;
     }
-
+//pops the first card(does remove it)
     public Card popFirstCard() {
         if (Deck.size() > 0) {
             Card tempCard = Deck.get(0);
@@ -67,7 +67,7 @@ public class Deck {
         return false;
 
     }
-
+//fills with a clean deck that isnt shuffled
     public void addCleanDeck() {
         for (int i = 1; i <= 13; i++) {
             for (int j = 1; j <= 4; j++) {
@@ -90,23 +90,23 @@ public class Deck {
             }
         }
     }
-
+//shuffle the deck
     public void shuffleDeck() {
         Collections.shuffle(Deck);
     }
-
+//add a card to the front
     public void addtoFront(Card c) {
         Deck.add(0, c);
     }
-
+//get the size of the deck
     public int getSize() {
         return Deck.size();
     }
-
+//get a card from a certain index (without removing it)
     public Card get(int i) {
         return Deck.get(i);
     }
-
+//get the front card from the deck (without removing it)
     public Card getFirst() {
         return Deck.get(0);
     }
