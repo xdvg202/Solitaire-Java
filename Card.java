@@ -10,45 +10,43 @@ public class Card {
     private BufferedImage cardImg;
     private BufferedImage backImg;
     private boolean fd;
-    private boolean isFront;
+
     private int x;
     private int y;
 
     public Card(int value, String suit) {
         this.value = value;
         this.suit = suit;
-        isFront = false;
+
         fd = true;
         loadImage();
 
     }
-    public void setXY(int x, int y){
+
+    public void setXY(int x, int y) {
         this.x = x;
         this.y = y;
     }
-    public int getX(){
+
+    public int getX() {
         return x;
     }
-    public int getY(){
+
+    public int getY() {
         return y;
     }
 
-    public void setFront(){
-        isFront = true;
+    public void setFaceDown(boolean down) {
+
+        if (down) {
+            fd = true;
+        } else {
+            fd = false;
+        }
     }
-    public boolean getIsFront(){
-        return isFront;
-    }
-    
-    public void setFaceDown(boolean down){
-       if(down){
-        fd = true;
-       }else{
-        fd = false;
-       }
-    }
-    public String toString(){
-        return value+" "+suit; 
+
+    public String toString() {
+        return value + " " + suit;
     }
 
     // method that loads the cards image into a variable.

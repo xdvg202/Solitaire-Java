@@ -102,10 +102,10 @@ public class SolitaireDriver implements MouseListener, ActionListener {
                     primaryStacks[i] = new Deck(false);
                 }
 
-                Card temp = sourceDeck.popFirstCard();
+                Card temp = sourceDeck.pop();
 
                 // add the card to the pile
-                primaryStacks[i].addtoFront(temp);
+                primaryStacks[i].push(temp);
             }
         }
 
@@ -114,8 +114,8 @@ public class SolitaireDriver implements MouseListener, ActionListener {
         // go through entire source deck and add those remaining cards into the pickup
         // deck
         while (sourceDeck.getSize() > 0) {
-            Card temp = sourceDeck.popFirstCard();
-            pickupDeck.addtoFront(temp);
+            Card temp = sourceDeck.pop();
+            pickupDeck.push(temp);
         }
         for (int k = 0; k < secondaryStacks.length; k++) {
             secondaryStacks[k] = new Deck(false);
@@ -167,11 +167,14 @@ public class SolitaireDriver implements MouseListener, ActionListener {
 
             if ((e.getY() < 60 + cardHeight) && (e.getY() > 60)) {
                 if (pickupDeck.getSize() > 0) {
-                    Card temp = pickupDeck.popFirstCard();
+                    Card temp = pickupDeck.pop();
                     temp.setFaceDown(false);
-                    wasteDeck.addtoFront(temp);
+                    wasteDeck.push(temp);
                 }
             }
+        }
+        if (pickupDeck.getSize() == 0) {
+
         }
 
     }
@@ -195,7 +198,7 @@ public class SolitaireDriver implements MouseListener, ActionListener {
 
                     // check if its the front card if so it will change what Y's its looking for.
                     // then call the method with the current pile number and current card number
-                    if (primaryStacks[i].get(j).getIsFront()) {
+                    if (primaryStacks[i].getSize() - 1 == j) {
                         if (mouseY > y && mouseY < y + cardHeight) {
                             addCardsToHighlightedDeck(i, j);
                         }
@@ -205,6 +208,9 @@ public class SolitaireDriver implements MouseListener, ActionListener {
                     else if (mouseY > y && mouseY < y + cardEdgeHeight) {
                         addCardsToHighlightedDeck(i, j);
                     }
+                    // TODO make sure to clear the highlight deck and remove the cards from other
+                    // piles when adding
+                    // TODO start adding card logic
 
                 }
             }
@@ -220,44 +226,37 @@ public class SolitaireDriver implements MouseListener, ActionListener {
         }
 
     }
-//TODO fix this LOLLLLLL 
-//this is not fun. BUT figure out why mouse released keeps triggering and never puts card down. 
-//is this a draw error???
-//most likely an error in here. 
+
     public void mouseReleased(MouseEvent e) {
         mouseX = e.getX();
         mouseY = e.getY() - 30;
-        if (highlightedCards.size() > 0) {
-            for (int i = 0; i < primaryStacks.length; i++) {
 
-                // go thru each card of the pile
-                for (int j = 0; j < primaryStacks[i].getSize(); j++) {
-                    int x = primaryStacks[i].get(j).getX();
-                    int y = primaryStacks[i].get(j).getY();
+        for (int i = 0; i < primaryStacks.length; i++) {
 
-                    // check if the x's align between mouse and card
-                    if (mouseX > x && mouseX < x + cardWidth) {
+            // go thru each card of the pile
+            for (int j = 0; j < primaryStacks[i].getSize(); j++) {
+                int x = primaryStacks[i].get(j).getX();
+                int y = primaryStacks[i].get(j).getY();
 
+                // check if the x's align between mouse and card
+                if (mouseX > x && mouseX < x + cardWidth) {
+                    if (highlightedCards.size() > 0) {
                         // check if its the front card if so it will change what Y's its looking for.
                         // then call the method with the current pile number and current card number
-                        if (primaryStacks[i].get(j).getIsFront()) {
+                        if (primaryStacks[i].getSize() - 1 == j) {
+
                             if (mouseY > y && mouseY < y + cardHeight) {
 
-                                for (int l = 0; l < highlightedCards.size(); l++) {
-                                    primaryStacks[i].addtoFront(highlightedCards.get(l));
+                                while (highlightedCards.size() > 0) {
+
+                                    primaryStacks[i].push(highlightedCards.get(0));
+                                    highlightedCards.remove(0);
                                 }
-
+                                for (int g = 0; g < primaryStacks[i].getSize(); g++) {
+                                    System.out.println(primaryStacks[i].get(g));
+                                }
                             }
                         }
-                        // other condition where the card is not at the front.\
-                        // then call the method with the current pile number and current card number
-                        else if (mouseY > y && mouseY < y + cardEdgeHeight) {
-                            for (int l = 0; l < highlightedCards.size(); l++) {
-                                primaryStacks[i].addtoFront(highlightedCards.get(l));
-                            }
-
-                        }
-                        System.out.println(primaryStacks[i].get(j));
 
                     }
                 }
@@ -309,7 +308,7 @@ public class SolitaireDriver implements MouseListener, ActionListener {
 
                         // check if the card is the very front one.
                         if (j == primaryStacks[i].getSize() - 1) {
-                            primaryStacks[i].get(j).setFront();
+
                             primaryStacks[i].get(j).setFaceDown(false);
                             g2d.drawImage(primaryStacks[i].get(j).getCardImage(), x, y, cardWidth, cardHeight,
                                     this);
