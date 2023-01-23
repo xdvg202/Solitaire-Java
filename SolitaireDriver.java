@@ -41,6 +41,9 @@ public class SolitaireDriver implements MouseListener, ActionListener {
     public static JButton readMeBut;
     public static boolean loadDemoImage;
 
+    public static int mouseX;
+    public static int mouseY;
+
     public static void initialize() {
         canvas0.setLayout(null);
         // all NON-GUI related functions go here
@@ -176,8 +179,8 @@ public class SolitaireDriver implements MouseListener, ActionListener {
     public void mousePressed(MouseEvent e) {
         // easier to work with mouseX and mouseY and also since e.getY includes the
         // window title/header (which i dont need)
-        int mouseX = e.getX();
-        int mouseY = e.getY() - 30;
+        mouseX = e.getX();
+        mouseY = e.getY() - 30;
 
         // go thru entire primary stacks array and check if the mouse is clicked
         for (int i = 0; i < primaryStacks.length; i++) {
@@ -217,9 +220,50 @@ public class SolitaireDriver implements MouseListener, ActionListener {
         }
 
     }
-
+//TODO fix this LOLLLLLL 
+//this is not fun. BUT figure out why mouse released keeps triggering and never puts card down. 
+//is this a draw error???
+//most likely an error in here. 
     public void mouseReleased(MouseEvent e) {
+        mouseX = e.getX();
+        mouseY = e.getY() - 30;
+        if (highlightedCards.size() > 0) {
+            for (int i = 0; i < primaryStacks.length; i++) {
 
+                // go thru each card of the pile
+                for (int j = 0; j < primaryStacks[i].getSize(); j++) {
+                    int x = primaryStacks[i].get(j).getX();
+                    int y = primaryStacks[i].get(j).getY();
+
+                    // check if the x's align between mouse and card
+                    if (mouseX > x && mouseX < x + cardWidth) {
+
+                        // check if its the front card if so it will change what Y's its looking for.
+                        // then call the method with the current pile number and current card number
+                        if (primaryStacks[i].get(j).getIsFront()) {
+                            if (mouseY > y && mouseY < y + cardHeight) {
+
+                                for (int l = 0; l < highlightedCards.size(); l++) {
+                                    primaryStacks[i].addtoFront(highlightedCards.get(l));
+                                }
+
+                            }
+                        }
+                        // other condition where the card is not at the front.\
+                        // then call the method with the current pile number and current card number
+                        else if (mouseY > y && mouseY < y + cardEdgeHeight) {
+                            for (int l = 0; l < highlightedCards.size(); l++) {
+                                primaryStacks[i].addtoFront(highlightedCards.get(l));
+                            }
+
+                        }
+                        System.out.println(primaryStacks[i].get(j));
+
+                    }
+                }
+            }
+
+        }
     }
 
     public void mouseEntered(MouseEvent e) {
