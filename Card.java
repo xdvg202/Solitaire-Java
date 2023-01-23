@@ -47,6 +47,9 @@ public class Card {
         fd = false;
        }
     }
+    public String toString(){
+        return value+" "+suit; 
+    }
 
     // method that loads the cards image into a variable.
     public void loadImage() {

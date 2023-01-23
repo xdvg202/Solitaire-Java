@@ -3,6 +3,7 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.awt.*;
 import java.awt.image.*;
 
@@ -28,6 +29,7 @@ public class SolitaireDriver implements MouseListener, ActionListener {
     public static Deck[] secondaryStacks = new Deck[4];
     public static Deck pickupDeck;
     public static Deck wasteDeck;
+    public static ArrayList<Card> highlightedCards;
 
     public static final int cardWidth = 75;
     public static final int cardHeight = 150;
@@ -44,6 +46,7 @@ public class SolitaireDriver implements MouseListener, ActionListener {
         // all NON-GUI related functions go here
         sourceDeck = new Deck(true);
         sourceDeck.shuffleDeck();
+        highlightedCards = new ArrayList<Card>();
 
         initializeAllStacks();
 
@@ -159,7 +162,7 @@ public class SolitaireDriver implements MouseListener, ActionListener {
         // check click detenction for pickup deck
         if ((e.getX() < 20 + cardWidth) && (e.getX() > 20)) {
 
-            if ((e.getY() < 30 + cardHeight) && (e.getY() > 30)) {
+            if ((e.getY() < 60 + cardHeight) && (e.getY() > 60)) {
                 if (pickupDeck.getSize() > 0) {
                     Card temp = pickupDeck.popFirstCard();
                     temp.setFaceDown(false);
@@ -171,10 +174,12 @@ public class SolitaireDriver implements MouseListener, ActionListener {
     }
 
     public void mousePressed(MouseEvent e) {
+        // easier to work with mouseX and mouseY and also since e.getY includes the
+        // window title/header (which i dont need)
+        int mouseX = e.getX();
+        int mouseY = e.getY() - 30;
 
         // go thru entire primary stacks array and check if the mouse is clicked
-        // on the front card using the getFrontCardx/y method
-
         for (int i = 0; i < primaryStacks.length; i++) {
 
             // go thru each card of the pile
@@ -182,22 +187,33 @@ public class SolitaireDriver implements MouseListener, ActionListener {
                 int x = primaryStacks[i].get(j).getX();
                 int y = primaryStacks[i].get(j).getY();
 
-                // have case to check for regular tip only card by using tipCardHeight and
-                // tipCardWidth
+                // check if the x's align between mouse and card
+                if (mouseX > x && mouseX < x + cardWidth) {
 
-                // and one case for front face card. by using card width and card height
-                if (e.getX() > x && e.getX() < x + cardWidth) {
+                    // check if its the front card if so it will change what Y's its looking for.
+                    // then call the method with the current pile number and current card number
                     if (primaryStacks[i].get(j).getIsFront()) {
-                        if (e.getY() > y && e.getY() < y + cardHeight) {
-                            System.out.println("hello this is a front card");
+                        if (mouseY > y && mouseY < y + cardHeight) {
+                            addCardsToHighlightedDeck(i, j);
                         }
                     }
-                    else if(e.getY() > y && e.getY() < y + cardEdgeHeight) {
-                        System.out.println("hello this isnt");
+                    // other condition where the card is not at the front.\
+                    // then call the method with the current pile number and current card number
+                    else if (mouseY > y && mouseY < y + cardEdgeHeight) {
+                        addCardsToHighlightedDeck(i, j);
                     }
 
                 }
             }
+        }
+
+    }
+
+    public static void addCardsToHighlightedDeck(int pileNum, int cardIndex) {
+        // go through the pile and add every card after the card that was clicked
+        // (including the card itself)
+        for (int p = cardIndex; p < primaryStacks[pileNum].getSize(); p++) {
+            highlightedCards.add(primaryStacks[pileNum].get(p));
         }
 
     }
@@ -207,11 +223,9 @@ public class SolitaireDriver implements MouseListener, ActionListener {
     }
 
     public void mouseEntered(MouseEvent e) {
-
     }
 
     public void mouseExited(MouseEvent e) {
-
     }
 
     public static void main(String[] args) {
