@@ -31,32 +31,7 @@ public class Deck {
         }
     }
 
-    // TODO might have to move/remove this method
-    public boolean isCardSequential(Card c) {
-        int value = c.getValue();
-        Card back = Deck.get(Deck.size() - 1);
-
-        // notes the color of the other card trying to be put on.
-        boolean red = false;
-        if (c.getSuit().equals("h") || c.getSuit().equals("d")) {
-            red = true;
-        }
-        // notes the color of the card in the back of this deck
-        boolean red2 = false;
-        if (back.getSuit().equals("h") || back.getSuit().equals("d")) {
-            red = true;
-        }
-        // if the card value difference is one.
-        if (value - (back.getValue()) == 1) {
-            // check if suits match
-            if (red2 != red) {
-                return true;
-            }
-
-        }
-        return false;
-
-    }
+    
 
     // fills with a clean deck that isnt shuffled
     public void addCleanDeck() {
@@ -104,9 +79,5 @@ public class Deck {
         return Deck.get(i);
     }
 
-    // get the front card from the deck (without removing it)
-    public Card getFirst() {
-        return Deck.get(0);
-    }
-
+    
 }
