@@ -197,6 +197,9 @@ public class SolitaireDriver implements MouseListener, ActionListener, MouseMoti
             if (state == inGame) {
                 initialize();
             }
+            if(state == instructions){
+                state = inGame;
+            }
 
         }
         // all the button to fulfill their functions
@@ -546,10 +549,10 @@ public class SolitaireDriver implements MouseListener, ActionListener, MouseMoti
 
             super.paintComponent(g);
             Graphics2D g2d = (Graphics2D) g;
-            setBackground(Color.MAGENTA);
+            setBackground(Color.darkGray);
 
             if (state == inMenu) {
-
+g2d.setColor(Color.WHITE);
                 g2d.setFont(new Font("hello", Font.BOLD, 50));
                 g2d.drawString("Welcome to Solitaire!", canvas0.getWidth() / 2 - 250, canvas0.getHeight() / 2);
                 g2d.setFont(new Font("TimesRoman", Font.ITALIC, 20));
@@ -663,6 +666,7 @@ public class SolitaireDriver implements MouseListener, ActionListener, MouseMoti
 
                 } else {
                     // string repre of basic instructions
+                    g2d.setColor(Color.WHITE);
                     g2d.setFont(new Font("hello", Font.BOLD, 15));
                     String[] simpInstr = {
                             "The goal of this game is to organize all the card into",
