@@ -41,6 +41,7 @@ public class SolitaireDriver implements MouseListener, ActionListener, MouseMoti
     public static JButton startButton;
     public static JButton menuButton;
     public static JButton instrButton;
+    public static JButton exitButton;
 
     public static Deck sourceDeck;
     public static Deck[] primaryStacks = new Deck[7];
@@ -90,9 +91,12 @@ public class SolitaireDriver implements MouseListener, ActionListener, MouseMoti
             startButton = new JButton("Start/Restart Game");
             menuButton = new JButton("Menu");
             instrButton = new JButton("Instructions");
+            exitButton = new JButton("Quit");
             butPanel.add(startButton);
             butPanel.add(menuButton);
             butPanel.add(instrButton);
+            butPanel.add(exitButton);
+            exitButton.addActionListener(new SolitaireDriver());
             startButton.addActionListener(new SolitaireDriver());
             menuButton.addActionListener(new SolitaireDriver());
             instrButton.addActionListener(new SolitaireDriver());
@@ -210,6 +214,9 @@ public class SolitaireDriver implements MouseListener, ActionListener, MouseMoti
                 loadDemoImage = true;
             }
 
+        }
+        if(e.getSource() == exitButton){
+            System.exit(0);
         }
         canvas0.repaint();
     }
