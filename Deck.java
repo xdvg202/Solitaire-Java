@@ -14,7 +14,7 @@ public class Deck {
     // non modifier method to get the front card in the stack
     public Card getFirstCard() {
         if (Deck.size() > 0) {
-            return Deck.get(0);
+            return Deck.get(Deck.size()-1);
         } else {
             return null;
         }
@@ -56,6 +56,7 @@ public class Deck {
             }
         }
     }
+    
 
     // shuffle the deck
     public void shuffleDeck() {

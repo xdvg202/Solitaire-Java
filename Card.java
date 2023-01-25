@@ -22,20 +22,20 @@ public class Card {
         loadImage();
 
     }
-
+//sets the x and y of the card
     public void setXY(int x, int y) {
         this.x = x;
         this.y = y;
     }
-
+//fetch the y of the card
     public int getX() {
         return x;
     }
-
+//fetch the x of the card
     public int getY() {
         return y;
     }
-
+//set the condition of the card whether it be face up or face down
     public void setFaceDown(boolean down) {
 
         if (down) {
@@ -44,7 +44,7 @@ public class Card {
             fd = false;
         }
     }
-
+//return a string representation of the card
     public String toString() {
         return value + " " + suit;
     }

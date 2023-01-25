@@ -1,3 +1,21 @@
+/* ICS Culminating project 2023 
+ * Solitaire solo player card game by:
+ * ---------------------------
+ * |                         |
+ * |        Victor           |
+ * |       Poltavski         |
+ * |                         |
+ * ---------------------------
+ * 
+ * The goal of the game is to organize all 52 cards into the top four stacks.
+ * The game is played by sorting the piles by specific order.
+ * By sorting more and more, more cards are revealed for your usage.
+ * There is also a pickup stack where you can pickup cards from. 
+ * The cards are sorted in a reciprocating color order and go down by face value towards the front of the stack.
+ * 
+ * 
+ * Refer to readme for more detail...
+ */
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.event.*;
@@ -42,12 +60,14 @@ public class SolitaireDriver implements MouseListener, ActionListener, MouseMoti
     public static boolean isTxtRunning = false;
     public static JButton demoBut;
     public static BufferedImage demoImage;
+    public static BufferedImage bg;
     public static JButton readMeBut;
     public static boolean loadDemoImage;
 
     public static int mouseX;
     public static int mouseY;
 
+    // method that initializes all the variables/GUI related things
     public static void initialize() {
         canvas0.setLayout(null);
         // all NON-GUI related functions go here
@@ -60,45 +80,47 @@ public class SolitaireDriver implements MouseListener, ActionListener, MouseMoti
         initializeAllStacks();
 
         // all GUI related functions go here
-
-        frame0 = new JFrame("Solitaire By Victor Poltavski.");
-        frame0.setSize(800, 600);
-        frame0.setLayout(new BorderLayout());
-
-        butPanel = new JPanel(new FlowLayout());
-        startButton = new JButton("Start/Restart Game");
-        menuButton = new JButton("Menu");
-        instrButton = new JButton("Instructions");
-        butPanel.add(startButton);
-        butPanel.add(menuButton);
-        butPanel.add(instrButton);
-        startButton.addActionListener(new SolitaireDriver());
-        menuButton.addActionListener(new SolitaireDriver());
-        instrButton.addActionListener(new SolitaireDriver());
-
-        readMeBut = new JButton("README");
-        canvas0.add(readMeBut);
-        readMeBut.addActionListener(new SolitaireDriver());
-        readMeBut.setBounds(50, 125, 100, 50);
-        readMeBut.setVisible(false);
-
-        demoBut = new JButton("Click here to see what game might look like");
-        demoBut.setBounds(50, 25, 300, 50);
-        demoBut.addActionListener(new SolitaireDriver());
-        demoBut.setVisible(false);
-        canvas0.add(demoBut);
-
-        frame0.addMouseListener(new SolitaireDriver());
-        frame0.addMouseMotionListener(new SolitaireDriver());
-        frame0.add(canvas0, BorderLayout.CENTER);
-        frame0.add(butPanel, BorderLayout.SOUTH);
-        frame0.requestFocus();
-        frame0.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame0.setVisible(true);
-        timer0.start();
-
+        if (state == inMenu) {
+            // initialize the frame
+            frame0 = new JFrame("Solitaire By Victor Poltavski.");
+            frame0.setSize(800, 700);
+            frame0.setLayout(new BorderLayout());
+            // fill out basic functions of game (the buttons for them)
+            butPanel = new JPanel(new FlowLayout());
+            startButton = new JButton("Start/Restart Game");
+            menuButton = new JButton("Menu");
+            instrButton = new JButton("Instructions");
+            butPanel.add(startButton);
+            butPanel.add(menuButton);
+            butPanel.add(instrButton);
+            startButton.addActionListener(new SolitaireDriver());
+            menuButton.addActionListener(new SolitaireDriver());
+            instrButton.addActionListener(new SolitaireDriver());
+            // readme button on instruction screen
+            readMeBut = new JButton("README");
+            canvas0.add(readMeBut);
+            readMeBut.addActionListener(new SolitaireDriver());
+            readMeBut.setBounds(50, 125, 100, 50);
+            readMeBut.setVisible(false);
+            // demo button, controls demo image in the instruction screen
+            demoBut = new JButton("Click here to see what game might look like");
+            demoBut.setBounds(50, 25, 300, 50);
+            demoBut.addActionListener(new SolitaireDriver());
+            demoBut.setVisible(false);
+            canvas0.add(demoBut);
+            // all the frame related finilizations
+            frame0.addMouseListener(new SolitaireDriver());
+            frame0.addMouseMotionListener(new SolitaireDriver());
+            frame0.add(canvas0, BorderLayout.CENTER);
+            frame0.add(butPanel, BorderLayout.SOUTH);
+            frame0.requestFocus();
+            frame0.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame0.setVisible(true);
+            timer0.start();
+        }
     }
 
+    // method that fills each stack up
     public static void initializeAllStacks() {
         // first for the primary stacks
         for (int i = 0; i < 7; i++) {
@@ -130,30 +152,57 @@ public class SolitaireDriver implements MouseListener, ActionListener, MouseMoti
 
     }
 
+    // method that checks for many types of triggers
     public void actionPerformed(ActionEvent e) {
+        // check for refresh of timer
         if (e.getSource() == timer0) {
 
+            // change appearances of buttons based off of game state
             if (state == instructions) {
                 readMeBut.setVisible(true);
                 demoBut.setVisible(true);
             }
+
             if (state == inMenu || state == inGame) {
                 readMeBut.setVisible(false);
                 demoBut.setVisible(false);
             }
+            // checks if player has won
+            if (secondaryStacks[0].getSize() == 13) {
+                if (secondaryStacks[1].getSize() == 13) {
+                    if (secondaryStacks[2].getSize() == 13) {
+                        if (secondaryStacks[3].getSize() == 13) {
+
+                            state = won;
+                        }
+                    }
+                }
+            }
+
         }
+        // check if the menu button was clicked
         if (e.getSource() == menuButton) {
             state = inMenu;
         }
+        // check if the start button was clicked, and if it was, change states based on
+        // current state
         if (e.getSource() == startButton) {
-            state = inGame;
+            if (state == inMenu) {
+                state = inGame;
+            }
+            if (state == inGame) {
+                initialize();
+            }
+
         }
+        // all the button to fulfill their functions
         if (e.getSource() == instrButton) {
             state = instructions;
         }
         if (e.getSource() == readMeBut) {
             isTxtRunning = true;
         }
+        // decide whether or not to draw the demo image in the instruction screen
         if (e.getSource() == demoBut) {
             if (loadDemoImage) {
                 loadDemoImage = false;
@@ -165,25 +214,29 @@ public class SolitaireDriver implements MouseListener, ActionListener, MouseMoti
         canvas0.repaint();
     }
 
+    // check where the mouse was clicked, and decide what to do with that info
     public void mouseClicked(MouseEvent e) {
 
-        // 20x 30y for pickup deck
+        if (state == inGame) {
 
-        // check click detenction for pickup deck
-        if ((e.getX() < 20 + cardWidth) && (e.getX() > 20)) {
+            // check click detenction for pickup deck
+            if ((e.getX() < 20 + cardWidth) && (e.getX() > 20)) {
 
-            if ((e.getY() < 60 + cardHeight) && (e.getY() > 60)) {
+                if ((e.getY() < 60 + cardHeight) && (e.getY() > 60)) {
+                    // if pickup is available
+                    if (pickupDeck.getSize() > 0) {
 
-                if (pickupDeck.getSize() > 0) {
-                    System.out.println("triggered");
-                    Card temp = pickupDeck.pop();
-                    temp.setFaceDown(false);
-                    wasteDeck.push(temp);
-                } else {
-                    while (wasteDeck.getSize() > 0) {
-                        Card temp = wasteDeck.pop();
-                        temp.setFaceDown(true);
-                        pickupDeck.push(temp);
+                        Card temp = pickupDeck.pop();
+                        temp.setFaceDown(false);
+                        wasteDeck.push(temp);
+                    }
+                    // in the case that it isnt, reset the pickup pile
+                    else {
+                        while (wasteDeck.getSize() > 0) {
+                            Card temp = wasteDeck.pop();
+                            temp.setFaceDown(true);
+                            pickupDeck.push(temp);
+                        }
                     }
                 }
             }
@@ -191,66 +244,90 @@ public class SolitaireDriver implements MouseListener, ActionListener, MouseMoti
 
     }
 
+    // check where the mouse was pressed, and decide what to do with that info
     public void mousePressed(MouseEvent e) {
-        // easier to work with mouseX and mouseY and also since e.getY includes the
-        // window title/header (which i dont need)
-        mouseX = e.getX();
-        mouseY = e.getY() - 30;
+        if (state == inGame) {
+            // easier to work with mouseX and mouseY and also since e.getY includes the
+            // window title/header (which i dont need)
+            mouseX = e.getX();
+            mouseY = e.getY() - 30;
 
-        // go thru entire primary stacks array and check if the mouse is clicked
-        for (int i = 0; i < primaryStacks.length; i++) {
+            // go thru entire primary stacks array and check if the mouse is clicked
+            for (int i = 0; i < primaryStacks.length; i++) {
 
-            // go thru each card of the pile
-            for (int j = 0; j < primaryStacks[i].getSize(); j++) {
-                int x = primaryStacks[i].get(j).getX();
-                int y = primaryStacks[i].get(j).getY();
+                // go thru each card of the pile
+                for (int j = 0; j < primaryStacks[i].getSize(); j++) {
+                    int x = primaryStacks[i].get(j).getX();
+                    int y = primaryStacks[i].get(j).getY();
 
-                // check if the x's align between mouse and card
-                if (mouseX > x && mouseX < x + cardWidth) {
+                    // check if the x's align between mouse and card
+                    if (mouseX > x && mouseX < x + cardWidth) {
 
-                    // check if its the front card if so it will change what Y's its looking for.
-                    // then call the method with the current pile number and current card number
-                    if (primaryStacks[i].getSize() - 1 == j) {
-                        if (mouseY > y && mouseY < y + cardHeight) {
+                        // check if its the front card if so it will change what Y's its looking for.
+                        // then call the method with the current pile number and current card number
+                        if (primaryStacks[i].getSize() - 1 == j) {
+                            if (mouseY > y && mouseY < y + cardHeight) {
+
+                                addCardsToHighlightedDeck(i, j);
+                                highlightCardSource = primaryCard;
+
+                            }
+                        }
+                        // other condition where the card is not at the front.
+                        // then call the method with the current pile number and current card number
+                        else if (mouseY > y && mouseY < y + cardEdgeHeight) {
                             addCardsToHighlightedDeck(i, j);
                             highlightCardSource = primaryCard;
                         }
-                    }
-                    // other condition where the card is not at the front.
-                    // then call the method with the current pile number and current card number
-                    else if (mouseY > y && mouseY < y + cardEdgeHeight) {
-                        addCardsToHighlightedDeck(i, j);
-                        highlightCardSource = primaryCard;
-                    }
 
+                    }
+                }
+
+            }
+            // if the mouse was pressed on the waste deck, perform correct function
+            if (wasteDeck.getSize() > 0) {
+                if (mouseX > 110 && mouseX < 110 + cardWidth) {
+                    if (mouseY > 30 && mouseY < 30 + cardHeight) {
+
+                        highlightedCards.add(wasteDeck.get(wasteDeck.getSize() - 1));
+                        highlightCardSource = pickupCard;
+
+                    }
                 }
             }
         }
-
-        if (wasteDeck.getSize() > 0) {
-            if (mouseX > 110 && mouseX < 110 + cardWidth) {
-                if (mouseY > 30 && mouseY < 30 + cardHeight) {
-                    highlightedCards.add(wasteDeck.get(wasteDeck.getSize() - 1));
-                    highlightCardSource = pickupCard;
-                }
-            }
-        }
-
     }
 
+    // removes the cards that are in the highlighted card arraylist from the primary
+    // stacks
     public static void removeHighlightedCards() {
-        while(highlightedCards.size()>0) {
+        // check if the card derives either from the primary card stack
+        if (highlightCardSource == primaryCard) {
+            int stackNum = 0;
+            // go through each pile
             for (int i = 0; i < primaryStacks.length; i++) {
+                // go through each card
                 for (int j = 0; j < primaryStacks[i].getSize(); j++) {
+                    // if it is found note its pile.
                     if (primaryStacks[i].get(j) == highlightedCards.get(0)) {
-                        primaryStacks[i].pop();
+                        stackNum = i;
+                        break;
                     }
                 }
             }
-
+            // remove the cards from locatred pile
+            for (int k = 0; k < highlightedCards.size(); k++) {
+                primaryStacks[stackNum].pop();
+            }
         }
+        // if it comes from the pickup, remove the card off the pile
+        else if (highlightCardSource == pickupCard) {
+            wasteDeck.pop();
+        }
+
     }
 
+    // adds all the cards that were specified by method call
     public static void addCardsToHighlightedDeck(int pileNum, int cardIndex) {
         // go through the pile and add every card after the card that was clicked
         // (including the card itself)
@@ -260,109 +337,144 @@ public class SolitaireDriver implements MouseListener, ActionListener, MouseMoti
 
     }
 
+    // method to check where the mouse was released, and what to do with that info
     public void mouseReleased(MouseEvent e) {
-        mouseX = e.getX();
-        mouseY = e.getY() - 30;
+        if (state == inGame) {
 
-        System.out.println("ref");
+            mouseX = e.getX();
+            mouseY = e.getY() - 30;
 
-        for (int i = 0; i < primaryStacks.length; i++) {
+            // if released on a primary stack
+            if (mouseY > 250) {
+                // go thru each pile
+                for (int i = 0; i < primaryStacks.length; i++) {
+                    // check that pile is empty
+                    if (primaryStacks[i].getSize() == 0) {
+                        // make sure the xs and ys align
+                        if (mouseX > (25 + i * 110) && mouseX < (25 + i * 110 + cardWidth)) {
 
-            // go thru each card of the pile
-            for (int j = 0; j < primaryStacks[i].getSize(); j++) {
-                int x = primaryStacks[i].get(j).getX();
-                int y = primaryStacks[i].get(j).getY();
-                
-                System.out.println(primaryStacks[i].getSize());
+                            if (mouseY > 250 && mouseY < 250 + cardHeight) {
+                                // if the highlighted card stack is of viable length
+                                if (highlightedCards.size() > 0) {
+                                    // check if the first card being added to the empty pile is a king (rule of
+                                    // solitaire)
+                                    if (highlightedCards.get(0).getValue() == 13) {
+                                        // add them jawns
+                                        for (int v = 0; v < highlightedCards.size(); v++) {
 
+                                            primaryStacks[i].push(highlightedCards.get(v));
 
-                if (primaryStacks[i].getSize() == 0) {
-                    if (mouseX > 30 && mouseX < 30 + cardWidth) {
-                        if (mouseY > 250 && mouseY < 250 + cardHeight) {
-                            System.out.println(highlightedCards.get(0).getValue());
-                            if (highlightedCards.get(0).getValue() == 13) {
-                                while (highlightedCards.size() > 0) {
-                                    if (primaryStacks[i].getSize() == 0) {
-                                        Card temp = highlightedCards.get(0);
-                                        temp.setXY(25, 250);
-                                        primaryStacks[i].push(temp);
-                                        highlightedCards.remove(0);
-                                    }else{
+                                        }
+                                        // clear out all highlighted cards from their original pile and also the
+                                        // highlighted card arraylist
+                                        removeHighlightedCards();
+                                        clearHighLightedCards();
 
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    // go thru each card of the pile
+                    for (int j = 0; j < primaryStacks[i].getSize(); j++) {
+
+                        int x = primaryStacks[i].get(j).getX();
+                        int y = primaryStacks[i].get(j).getY();
+                        // check if the mouse was released into a primary stack
+
+                        // check if the x's align between mouse and card
+                        if (mouseX > x && mouseX < x + cardWidth) {
+                            if (highlightedCards.size() > 0) {
+
+                                // check if its the front card if so it will change what Y's its looking for.
+                                // then call the method with the current pile number and current card number
+
+                                if (primaryStacks[i].getSize() - 1 == j) {
+
+                                    if (mouseY > y && mouseY < y + cardHeight) {
+                                        // check if they can really be placed
+                                        if (isCardSequential(highlightedCards.get(0), primaryStacks[i].get(j), true)) {
+
+                                            // move highlighted cards into the stack by first removing the cards from
+                                            // their original piles.
+
+                                            removeHighlightedCards();
+
+                                            while (highlightedCards.size() > 0) {
+
+                                                primaryStacks[i].push(highlightedCards.get(0));
+                                                highlightedCards.remove(0);
+                                            }
+
+                                        }
+                                        // conditions where things didnt go perfectly to just clear the highlightedstack
+                                        else {
+                                            clearHighLightedCards();
+                                        }
+
+                                    } else {
+                                        clearHighLightedCards();
                                     }
 
                                 }
                             }
                         }
+
+                        // check if the mouse was released on a secondary stack
+
                     }
+
                 }
-                // check if the mouse was released into a primary stack
-                if (mouseY > 250) {
-                    // check if the x's align between mouse and card
-                    if (mouseX > x && mouseX < x + cardWidth) {
-                        if (highlightedCards.size() > 0) {
+            }
+            // if released on a secondary stack
+            // multiple if statements to make sure all conditions are met before adding the
+            // cards into the pile
+            else if (mouseY > 30 && mouseY < 30 + cardHeight) {
 
-                            // check if its the front card if so it will change what Y's its looking for.
-                            // then call the method with the current pile number and current card number
-                        }
-                        if (primaryStacks[i].getSize() - 1 == j) {
+                for (int m = 0; m < secondaryStacks.length; m++) {
 
-                            if (mouseY > y && mouseY < y + cardHeight) {
+                    if (mouseX > (300 + m * 110) && mouseX < (300 + m * 110) + cardWidth) {
+                        // if only one card is being added
+                        if (highlightedCards.size() == 1) {
+                            // if adding to an empty secondary stack, remove card from original stack and
+                            // add to secondary
+                            if (secondaryStacks[m].getSize() == 0) {
 
-                                if (isCardSequential(highlightedCards.get(0), primaryStacks[i].get(j))) {
-
-                                    // move highlighted cards into the stack
+                                if (highlightedCards.get(0).getValue() == 1) {
                                     removeHighlightedCards();
-                                    while (highlightedCards.size() > 0) {
+                                    secondaryStacks[m].push(highlightedCards.get(0));
 
-                                        primaryStacks[i].push(highlightedCards.get(0));
-                                        highlightedCards.remove(0);
-                                    }
-
-                                    for (int g = 0; g < primaryStacks[i].getSize(); g++) {
-                                        System.out.println(primaryStacks[i].get(g));
-                                    }
                                 }
-
-                                else {
-                                    clearHighLightedCards();
+                            }
+                            // case where secondary pile already has cards, check conditions if it can add
+                            // them to the stack
+                            else {
+                                if (isCardSequential(highlightedCards.get(0),
+                                        secondaryStacks[m].get(secondaryStacks[m].getSize() - 1), false)) {
+                                    removeHighlightedCards();
+                                    secondaryStacks[m].push(highlightedCards.get(0));
                                 }
-
-                            } else {
-                                clearHighLightedCards();
                             }
 
                         }
-                    }
-
-                }
-
-                // check if the mouse was released on a secondary stack
-                if (mouseY > 30 && mouseY < 30 + cardHeight) {
-                    for (int m = 0; m < secondaryStacks.length; m++) {
-                        if (mouseX > 250 && mouseX < 250 + m * 110) {
-                            while (highlightedCards.size() > 0) {
-                                secondaryStacks[i].push(highlightedCards.get(0));
-                                highlightedCards.remove(0);
-                            }
-                        }
+                        // if conditions not met, clear cards
+                        clearHighLightedCards();
                     }
                 }
             }
-
-        }
-
-        if (highlightCardSource == pickupCard) {
-            wasteDeck.pop();
+            clearHighLightedCards();
         }
     }
 
+    // clear the highlighted cards
     public static void clearHighLightedCards() {
         while (highlightedCards.size() > 0) {
             highlightedCards.remove(0);
         }
     }
 
+    // update mousex and mousey upon dragging of the mouse
     public void mouseDragged(MouseEvent e) {
         mouseX = e.getX();
         mouseY = e.getY();
@@ -374,7 +486,9 @@ public class SolitaireDriver implements MouseListener, ActionListener, MouseMoti
     public void mouseExited(MouseEvent e) {
     }
 
-    public boolean isCardSequential(Card a, Card b) {
+    // check if the cards can be put in order to each other
+    public boolean isCardSequential(Card a, Card b, boolean primary) {
+
         int value = a.getValue();
         Card back = b;
 
@@ -386,26 +500,39 @@ public class SolitaireDriver implements MouseListener, ActionListener, MouseMoti
         // notes the color of the card in the back of this deck
         boolean red2 = false;
         if (back.getSuit().equals("h") || back.getSuit().equals("d")) {
-            red = true;
+            red2 = true;
         }
         // if the card value difference is one.
-        if (back.getValue() - value == 1) {
-            // check if suits match
-            if (red2 != red) {
-                return true;
+
+        // check if suits match
+
+        // condition for when checking sequentiality based on which card stacks we are
+        // comparing
+        if (primary) {
+            if (back.getValue() - value == 1) {
+                if (red2 != red) {
+                    return true;
+                }
             }
 
+        } else {
+            if (red2 == red) {
+                if (value - back.getValue() == 1) {
+                    return true;
+                }
+            }
         }
         return false;
 
     }
 
     public static void main(String[] args) {
-        state = inGame;
+        state = inMenu;
         initialize();
 
     }
 
+    // the draw canvas metthod which draws every component
     public static class DrawCanvas extends JPanel {
 
         public void paintComponent(Graphics g) {
@@ -424,11 +551,19 @@ public class SolitaireDriver implements MouseListener, ActionListener, MouseMoti
             }
             if (state == inGame) {
 
+                // load background
+                try {
+                    bg = ImageIO.read(new File("bg.png"));
+                } catch (Exception e) {
+                    System.out.println("could not fetch file");
+                }
+                g2d.drawImage(bg, 0, 0, canvas0.getWidth(), canvas0.getHeight(), this);
+                // for each individual stack
                 for (int i = 0; i < primaryStacks.length; i++) {
 
                     int x = 25 + (110 * i);
                     // draw the outline for each primary stack.
-                    g2d.drawRoundRect(x, 250, cardWidth, cardHeight, 10, 10);
+                    g2d.fillRoundRect(x, 250, cardWidth, cardHeight, 10, 10);
                     // go through each pile
                     for (int j = 0; j < primaryStacks[i].getSize(); j++) {
 
@@ -440,7 +575,9 @@ public class SolitaireDriver implements MouseListener, ActionListener, MouseMoti
                             primaryStacks[i].get(j).setFaceDown(false);
                             g2d.drawImage(primaryStacks[i].get(j).getCardImage(), x, y, cardWidth, cardHeight,
                                     this);
-                        } else {
+                        }
+                        // if it isn't
+                        else {
                             g2d.drawImage(primaryStacks[i].get(j).getCardImage(), x, y, cardWidth, cardHeight,
                                     this);
                         }
@@ -448,16 +585,26 @@ public class SolitaireDriver implements MouseListener, ActionListener, MouseMoti
                     }
 
                 }
+                // draw the pickup pile outline
+                g2d.setColor(Color.LIGHT_GRAY);
+                g2d.fillRoundRect(20, 30, cardWidth, cardHeight, 10, 10);
 
+                // pickup pile text
+
+                g2d.setColor(Color.BLACK);
+                g2d.drawString("Click Here", 22, 70);
+                g2d.drawString("To Reset", 22, 90);
+
+                g2d.setColor(Color.LIGHT_GRAY);
                 // this is for the pickup stack:
-                g2d.drawRoundRect(20, 30, cardWidth, cardHeight, 10, 10);
+
                 if (pickupDeck.getSize() > 0) {
                     g2d.drawImage(pickupDeck.get(pickupDeck.getSize() - 1).getCardImage(), 20, 30, cardWidth,
                             cardHeight, this);
                 }
 
                 // this draws the waste stack
-                g2d.drawRoundRect(110, 30, cardWidth, cardHeight, 10, 10);
+                g2d.fillRoundRect(110, 30, cardWidth, cardHeight, 10, 10);
                 if (wasteDeck.getSize() > 0) {
                     g2d.drawImage(wasteDeck.get(wasteDeck.getSize() - 1).getCardImage(), 110, 30, cardWidth, cardHeight,
                             this);
@@ -466,13 +613,17 @@ public class SolitaireDriver implements MouseListener, ActionListener, MouseMoti
                 // draw the empty card outlines and if a secondary stack has a card, draw the
                 // first one.
                 for (int k = 0; k < secondaryStacks.length; k++) {
+                    g2d.fillRoundRect(300 + k * 110, 30, cardWidth, cardHeight, 10, 10);
+                    // if there is a card in the secondary stack, draw it
                     if (secondaryStacks[k].getSize() > 0) {
-                        g2d.drawImage(secondaryStacks[k].getFirstCard().getCardImage(), (250 + k * 110), 30, cardWidth,
-                                cardHeight, this);
-                    }
-                    g2d.drawRoundRect(300 + k * 110, 30, cardWidth, cardHeight, 10, 10);
-                }
 
+                        g2d.drawImage(secondaryStacks[k].getFirstCard().getCardImage(), (300 + k * 110), 30,
+                                cardWidth, cardHeight, this);
+
+                    }
+
+                }
+                // draw the highlighted cards as they are dragged throughout the panel
                 if (highlightedCards.size() > 0) {
                     for (int n = 0; n < highlightedCards.size(); n++) {
                         int ytemp = mouseY + 20 * n;
@@ -483,7 +634,7 @@ public class SolitaireDriver implements MouseListener, ActionListener, MouseMoti
                 }
             }
             if (state == instructions) {
-
+                // open notepad with readme if the button is clicked
                 if (isTxtRunning) {
                     ProcessBuilder pb = new ProcessBuilder("Notepad.exe", "README.txt");
                     try {
@@ -504,6 +655,7 @@ public class SolitaireDriver implements MouseListener, ActionListener, MouseMoti
                             this);
 
                 } else {
+                    // string repre of basic instructions
                     g2d.setFont(new Font("hello", Font.BOLD, 15));
                     String[] simpInstr = {
                             "The goal of this game is to organize all the card into",
@@ -525,7 +677,9 @@ public class SolitaireDriver implements MouseListener, ActionListener, MouseMoti
                 }
 
             }
-
+            if (state == won) {
+                g2d.drawString("YOU WON YAYYYYYY!!!!", canvas0.getWidth() / 2, canvas0.getHeight() / 2);
+            }
         }
     }
 
@@ -535,24 +689,4 @@ public class SolitaireDriver implements MouseListener, ActionListener, MouseMoti
     }
 
 }
-// TODO fix logic
-/*
- * - make cards moveable to secondary stacks
- * - double check the isCardSequential method because sometimes it doesnt work
- * by color or value
- * - moving multiple cards throws errors (probably that im passing in the wrong
- * card into the isCardSequential method)
- * - moving king to empty pile
- * - when pickup deck empty make sure to clear highlighted cards
- * - when moving whole stacks it does not properly remove the card at the front
- * of the highlighted cards
- * - when moving 7b6r5b to some valid location 7b get cloned and stays in that
- * pile.
- * - when moving multiple cards and placing them, then trying to move those back
- * somewhere it dont work.
- * ^^^^only if the first cards moved were NOT the first faceup card (not the one
- * closes but the furthest face up card)
- * - clean up background make more pretty
- * - make sure all game modes work (restart button works when in game.)
- * 
- */
+
