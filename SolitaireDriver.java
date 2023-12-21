@@ -1,3 +1,4 @@
+
 /* ICS Culminating project 2023 
  * Solitaire solo player card game by:
  * ---------------------------
@@ -197,7 +198,7 @@ public class SolitaireDriver implements MouseListener, ActionListener, MouseMoti
             if (state == inGame) {
                 initialize();
             }
-            if(state == instructions){
+            if (state == instructions) {
                 state = inGame;
             }
 
@@ -218,7 +219,7 @@ public class SolitaireDriver implements MouseListener, ActionListener, MouseMoti
             }
 
         }
-        if(e.getSource() == exitButton){
+        if (e.getSource() == exitButton) {
             System.exit(0);
         }
         canvas0.repaint();
@@ -552,7 +553,7 @@ public class SolitaireDriver implements MouseListener, ActionListener, MouseMoti
             setBackground(Color.darkGray);
 
             if (state == inMenu) {
-g2d.setColor(Color.WHITE);
+                g2d.setColor(Color.WHITE);
                 g2d.setFont(new Font("hello", Font.BOLD, 50));
                 g2d.drawString("Welcome to Solitaire!", canvas0.getWidth() / 2 - 250, canvas0.getHeight() / 2);
                 g2d.setFont(new Font("TimesRoman", Font.ITALIC, 20));
@@ -700,4 +701,3 @@ g2d.setColor(Color.WHITE);
     }
 
 }
-
